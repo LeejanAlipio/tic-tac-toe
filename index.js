@@ -6,8 +6,9 @@ function gameBoard() {
     ]
 
     const getBoard = () => board;
+    const resetBoard = () => board.fill('');
 
-    return { getBoard }
+    return { getBoard, resetBoard }
 }
 
 function createPlayer(name, marker) {
