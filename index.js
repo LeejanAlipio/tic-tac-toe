@@ -7,8 +7,13 @@ function gameBoard() {
 
     const getBoard = () => board;
     const resetBoard = () => board.fill('');
+    function placeMarker(index, marker) {
+        if (index < 0 || index > 8 || board[index] !== '') return false;
+        board[index] = marker
+        return true;
+    }
 
-    return { getBoard, resetBoard }
+    return { getBoard, resetBoard, placeMarker }
 }
 
 function createPlayer(name, marker) {
