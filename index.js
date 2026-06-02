@@ -13,3 +13,8 @@ function gameBoard() {
 function createPlayer(name, marker) {
     return { name, marker } 
 }
+
+function playGame() {
+    const playerOne = createPlayer('Player One', 'X');
+    const playerTwo = createPlayer('Player Two', 'O'); 
+}
