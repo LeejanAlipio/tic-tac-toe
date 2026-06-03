@@ -33,4 +33,12 @@ function playGame() {
     function switchActivePlayer() {
         activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
     }
+
+    function playRound(index) {
+        const successfulMove = board.placeMarker(index, activePlayer.marker);
+
+        if (successfulMove) {
+            switchActivePlayer();
+        }
+    }
 }
