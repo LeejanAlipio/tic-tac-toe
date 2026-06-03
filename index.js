@@ -7,7 +7,7 @@ function gameBoard() {
 
     const getBoard = () => board;
     const resetBoard = () => board.fill('');
-    function placeMarker(index, marker) {
+    const placeMarker = (index, marker) => {
         if (index < 0 || index > 8 || board[index] !== '') return false;
         board[index] = marker
         return true;
@@ -20,19 +20,20 @@ function createPlayer(name, marker) {
     return { name, marker } 
 }
 
-function playGame() {
+function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
     const board = gameBoard();
     
-    const playerOne = createPlayer('Player One', 'X');
-    const playerTwo = createPlayer('Player Two', 'O');
+    const playerOne = createPlayer(playerOneName, 'X');
+    const playerTwo = createPlayer(playerTwoName, 'O');
     
     let activePlayer = playerOne;
 
-    function switchActivePlayer() {
+    const switchActivePlayer = () => {
         activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
+        console.log(`${activePlayer.name}'s turn`);
     }
 
-    function playRound(index) {
+    const playRound = (index) => {
         const successfulMove = board.placeMarker(index, activePlayer.marker);
 
         if (successfulMove) {
