@@ -28,11 +28,19 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
     
     let activePlayer = playerOne;
 
+    const getBoard = () => board.getBoard();
+
     const switchActivePlayer = () => {
         activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
-        console.log(`${activePlayer.name}'s turn`);
     }
 
+    const getActivePlayer = () => activePlayer;
+
+    const newRound = () => {
+        console.log(board.getBoard());
+        console.log(`${activePlayer.name}'s turn`);
+    }
+    
     const playRound = (index) => {
         const successfulMove = board.placeMarker(index, activePlayer.marker);
 
@@ -40,13 +48,14 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
             switchActivePlayer();
         }
 
+        newRound();
+
         return successfulMove;
     }
 
-    const getBoard = () => board.getBoard();
-    const getActivePlayer = () => activePlayer;
+    newRound();
 
-    return { getActivePlayer, playRound, getBoard }
+    return { getActivePlayer, playRound, getBoard, newRound }
 }
 
 const game = playGame();
