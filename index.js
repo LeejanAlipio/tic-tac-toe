@@ -9,7 +9,7 @@ function gameBoard() {
     const resetBoard = () => board.fill('');
     const placeMarker = (index, marker) => {
         if (index < 0 || index > 8 || board[index] !== '') return false;
-        board[index] = marker
+        board[index] = marker;
         return true;
     }
 
@@ -30,6 +30,8 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
 
     const getBoard = () => board.getBoard();
 
+    const resetBoard = () => board.resetBoard();
+
     const switchActivePlayer = () => {
         activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
     }
@@ -44,10 +46,9 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
     const playRound = (index) => {
         const successfulMove = board.placeMarker(index, activePlayer.marker);
 
-        if (successfulMove) {
-            switchActivePlayer();
-        }
+        if (!successfulMove) return false;
 
+        switchActivePlayer();
         newRound();
 
         return successfulMove;
@@ -55,7 +56,7 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
 
     newRound();
 
-    return { getActivePlayer, playRound, getBoard, newRound }
+    return { getActivePlayer, playRound, getBoard, resetBoard }
 }
 
 const game = playGame();
