@@ -39,9 +39,15 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
     
     let activePlayer = playerOne;
 
+    let gameOver = false;
+
     const getBoard = () => board.getBoard();
 
-    const resetBoard = () => board.resetBoard();
+    const resetBoard = () => {
+        board.resetBoard();
+        activePlayer = playerOne;
+        gameOver = false;
+    }
 
     const switchActivePlayer = () => {
         activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
@@ -69,15 +75,20 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
     }
 
     const playRound = (index) => {
+        if (gameOver) return false;
+
         const successfulMove = board.placeMarker(index, activePlayer.marker);
 
         if (!successfulMove) return false;
 
-        let result = checkWinner();
+        const result = checkWinner();
 
         if (result) {
+            gameOver = true;
+
             if (result === 'draw') return 'Draw';
-            console.log(`${result.name} won!`);
+
+            console.log(`${activePlayer.name} won!`);
             return result;
         }
 
