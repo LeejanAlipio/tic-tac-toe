@@ -28,8 +28,6 @@ function playGame() {
     
     let activePlayer = playerOne;
 
-    const getActivePlayer = () => activePlayer;
-
     function switchActivePlayer() {
         activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
     }
@@ -40,5 +38,14 @@ function playGame() {
         if (successfulMove) {
             switchActivePlayer();
         }
+
+        return successfulMove;
     }
+
+    const getBoard = () => board.getBoard();
+    const getActivePlayer = () => activePlayer;
+
+    return { getActivePlayer, playRound, getBoard }
 }
+
+const game = playGame();
