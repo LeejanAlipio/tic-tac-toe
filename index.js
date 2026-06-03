@@ -21,6 +21,16 @@ function createPlayer(name, marker) {
 }
 
 function playGame() {
+    const board = gameBoard();
+    
     const playerOne = createPlayer('Player One', 'X');
-    const playerTwo = createPlayer('Player Two', 'O'); 
+    const playerTwo = createPlayer('Player Two', 'O');
+    
+    let activePlayer = playerOne;
+
+    const getActivePlayer = () => activePlayer;
+
+    function switchActivePlayer() {
+        activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
+    }
 }
