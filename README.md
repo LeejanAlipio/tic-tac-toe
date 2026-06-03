@@ -12,3 +12,9 @@ A project where I can use my recently gained knowledge about closures, factory f
     - RETURN name and marker
 3. CREATE a function that controls the flow of the game
     - MAKE two player by calling `createPlayer`
+    - CREATE an active player 
+        - MAKE `playerOne` active in default 
+        - CREATE a function that switches player if move is successful
+    - CREATE a function that plays a round that takes an index as parameter
+        - WHEN move is successful, switch player
+
