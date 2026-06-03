@@ -25,6 +25,17 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
     
     const playerOne = createPlayer(playerOneName, 'X');
     const playerTwo = createPlayer(playerTwoName, 'O');
+
+    const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ]
     
     let activePlayer = playerOne;
 
@@ -43,10 +54,32 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
         console.log(`${activePlayer.name}'s turn`);
     }
     
+    const checkWinner = () => {
+        const currentBoard = board.getBoard();
+
+        const hasWinner = winningCombinations.some(([a, b, c]) =>
+            currentBoard[a] !== '' &&
+            currentBoard[a] === currentBoard[b] &&
+            currentBoard[a] === currentBoard[c]
+        );
+
+        if (hasWinner) return activePlayer;
+        if (currentBoard.every(cell => cell !== '')) return 'draw';
+        return null;
+    }
+
     const playRound = (index) => {
         const successfulMove = board.placeMarker(index, activePlayer.marker);
 
         if (!successfulMove) return false;
+
+        let result = checkWinner();
+
+        if (result) {
+            if (result === 'draw') return 'Draw';
+            console.log(`${result.name} won!`);
+            return result;
+        }
 
         switchActivePlayer();
         newRound();
@@ -56,7 +89,13 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
 
     newRound();
 
-    return { getActivePlayer, playRound, getBoard, resetBoard }
+    return { 
+        getActivePlayer, 
+        playRound, 
+        getBoard, 
+        resetBoard,
+        checkWinner
+    }
 }
 
 const game = playGame();
