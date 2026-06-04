@@ -110,3 +110,31 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
 }
 
 const game = playGame();
+
+const activePlayer = document.querySelector('.active-player')
+activePlayer.textContent = `${game.getActivePlayer().name}'s turn`;
+const cells = document.querySelectorAll('.cell')
+
+function displayGame() {
+    const liveBoard = game.getBoard();
+
+    liveBoard.forEach((marker, index) => {
+        cells[index].textContent = marker;
+    });
+
+    const result = game.checkWinner();
+    activePlayer.textContent = result
+        ? result === 'draw'
+            ? 'Draw'
+            : `${result.name} won!`
+        : `${game.getActivePlayer().name}'s turn`;
+}
+
+cells.forEach((cell, index) => {
+    cell.addEventListener('click', () => {
+        game.playRound(index);
+        displayGame();
+    });
+});
+
+displayGame();
