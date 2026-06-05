@@ -118,3 +118,41 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
 }
 
 const game = playGame();
+
+function displayGame() {
+    const gameProgress = game.getBoard();
+    
+    const players = game.getPlayers();
+
+    const playerOneName = document.querySelector('.player-one-name');
+    playerOneName.textContent = players[0].name;
+    const playerOneScore = document.querySelector('.player-one-score');
+    playerOneScore.textContent = players[0].getScore();
+
+    const playerTwoName = document.querySelector('.player-two-name');
+    playerTwoName.textContent = players[1].name;
+    const playerTwoScore = document.querySelector('.player-two-score');
+    playerTwoScore.textContent = players[1].getScore();
+
+    const currentActivePlayer = document.querySelector('.active-player');
+    currentActivePlayer.textContent = `${game.getActivePlayer().name}'s Turn`;
+
+    const container = document.querySelector('.board-container');
+    container.textContent = '';
+
+    gameProgress.forEach((marker, index) => {
+        const cell = document.createElement('button');
+        cell.textContent = marker;
+        cell.classList.add('cell');
+        cell.dataset.index = index;
+
+        container.append(cell);
+
+        cell.addEventListener('click', () => {
+            game.playRound(index);
+            displayGame();
+        })
+    })
+}
+
+displayGame();
