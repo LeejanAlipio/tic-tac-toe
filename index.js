@@ -17,7 +17,11 @@ function gameBoard() {
 }
 
 function createPlayer(name, marker) {
-    return { name, marker } 
+    let score = 0;
+
+    const addScore = () => score++;
+    const getScore = () => score;
+    return { name, marker, getScore, addScore } 
 }
 
 function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
@@ -55,6 +59,8 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
 
     const getActivePlayer = () => activePlayer;
 
+    const getPlayers = () => [playerOne, playerTwo];
+
     const newRound = () => {
         console.log(board.getBoard());
         console.log(`${activePlayer.name}'s turn`);
@@ -88,6 +94,7 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
 
             if (result === 'draw') return 'Draw';
 
+            activePlayer.addScore();
             console.log(`${activePlayer.name} won!`);
             return result;
         }
@@ -101,7 +108,8 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
     newRound();
 
     return { 
-        getActivePlayer, 
+        getActivePlayer,
+        getPlayers, 
         playRound, 
         getBoard, 
         resetBoard,
@@ -110,31 +118,3 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
 }
 
 const game = playGame();
-
-const activePlayer = document.querySelector('.active-player')
-activePlayer.textContent = `${game.getActivePlayer().name}'s turn`;
-const cells = document.querySelectorAll('.cell')
-
-function displayGame() {
-    const liveBoard = game.getBoard();
-
-    liveBoard.forEach((marker, index) => {
-        cells[index].textContent = marker;
-    });
-
-    const result = game.checkWinner();
-    activePlayer.textContent = result
-        ? result === 'draw'
-            ? 'Draw'
-            : `${result.name} won!`
-        : `${game.getActivePlayer().name}'s turn`;
-}
-
-cells.forEach((cell, index) => {
-    cell.addEventListener('click', () => {
-        game.playRound(index);
-        displayGame();
-    });
-});
-
-displayGame();
