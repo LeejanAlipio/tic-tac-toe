@@ -153,6 +153,14 @@ function displayGame() {
             displayGame();
         })
     })
+
+    
 }
+
+const resetBtn = document.querySelector('.reset-btn');
+resetBtn.addEventListener('click', () => {
+    game.resetBoard();
+    displayGame();
+})
 
 displayGame();
