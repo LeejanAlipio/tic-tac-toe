@@ -119,23 +119,39 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
 
 const game = playGame();
 
-function displayGame() {
-    const gameProgress = game.getBoard();
-    
+function displayPlayers() {
     const players = game.getPlayers();
 
     const playerOneName = document.querySelector('.player-one-name');
-    playerOneName.textContent = players[0].name;
     const playerOneScore = document.querySelector('.player-one-score');
+    const playerTwoName = document.querySelector('.player-two-name');
+    const playerTwoScore = document.querySelector('.player-two-score');
+
+    playerOneName.textContent = players[0].name;
     playerOneScore.textContent = players[0].getScore();
 
-    const playerTwoName = document.querySelector('.player-two-name');
     playerTwoName.textContent = players[1].name;
-    const playerTwoScore = document.querySelector('.player-two-score');
     playerTwoScore.textContent = players[1].getScore();
+}
 
+function displayStatus(result) {
     const currentActivePlayer = document.querySelector('.active-player');
+
+    if (result === 'Draw') {
+        currentActivePlayer.textContent = 'Draw';
+        return;
+    }
+
+    if (result && result.name) {
+        currentActivePlayer.textContent = `${result.name} won!`;
+        return;
+    }
+
     currentActivePlayer.textContent = `${game.getActivePlayer().name}'s Turn`;
+}
+
+function displayBoard() {
+    const gameProgress = game.getBoard();
 
     const container = document.querySelector('.board-container');
     container.textContent = '';
@@ -149,15 +165,20 @@ function displayGame() {
         container.append(cell);
 
         cell.addEventListener('click', () => {
-            game.playRound(index);
-            displayGame();
+            const result = game.playRound(index);
+            displayGame(result);
         })
     })
+}
 
-    
+function displayGame(result) {
+    displayPlayers();
+    displayStatus(result);
+    displayBoard();
 }
 
 const resetBtn = document.querySelector('.reset-btn');
+
 resetBtn.addEventListener('click', () => {
     game.resetBoard();
     displayGame();
