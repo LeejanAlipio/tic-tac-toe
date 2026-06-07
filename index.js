@@ -1,4 +1,4 @@
-function gameBoard() {
+const gameBoard = (() => {
     let board = [
         '', '', '',
         '', '', '',
@@ -14,7 +14,7 @@ function gameBoard() {
     }
 
     return { getBoard, resetBoard, placeMarker }
-}
+})();
 
 function createPlayer(name, marker) {
     let score = 0;
