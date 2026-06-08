@@ -13,7 +13,7 @@ body {
 }
 
 .container {
-    width: 440px;
+    width: 500px;
     padding: 50px;
     display: flex;
     flex-direction: column;
@@ -35,9 +35,8 @@ body {
 .inputs input {
     padding: 10px;
     width: 150px;
-    color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 5px;
 }
 
 .start-btn {
@@ -50,7 +49,7 @@ body {
     font-weight: bold;
 }
 
-.start-btn:hover, .reset-btn:hover {
+.start-btn:hover, .reset-btn:hover, .play-btn:hover {
     opacity: 0.7;
 }
 
@@ -73,6 +72,7 @@ body {
 }
 
 .score {
+    width: 300px;
     background-color: #545F73;
     padding: 10px 30px;
     border-radius: 10px;
@@ -115,7 +115,14 @@ body {
     cursor: pointer;
 }
 
-.reset-btn {
+.btn-container {
+    display: none;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-btn, .reset-btn {
     background-color: #545F73;
     border: none;
     border-radius: 10px;
@@ -123,4 +130,5 @@ body {
     color: white;
     cursor: pointer;
     font-weight: bold;
+    flex: 1;
 }

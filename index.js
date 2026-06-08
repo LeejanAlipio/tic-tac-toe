@@ -14,12 +14,12 @@ const gameBoard = (() => {
 
 function createPlayer(name, marker) {
     let score = 0;
-    const addScore = () => score++;
     const getScore = () => score;
+    const addScore = () => score++;
     return { name, marker, getScore, addScore };
 }
 
-function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
+function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
     const playerOne = createPlayer(playerOneName, 'X');
     const playerTwo = createPlayer(playerTwoName, 'O');
 
@@ -32,19 +32,13 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
     let activePlayer = playerOne;
     let isGameOver = false;
 
-    const getLiveBoard = () => gameBoard.getBoard();
-
-    const resetLiveBoard = () => {
-        gameBoard.resetBoard();
-        activePlayer = playerOne;
-        isGameOver = false;
-    };
+    const getBoard = () => gameBoard.getBoard();
+    const getPlayers = () => [playerOne, playerTwo];
+    const getActivePlayer = () => activePlayer;
 
     const switchPlayer = () => {
         activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
     };
-
-    const getActivePlayer = () => activePlayer;
 
     const hasWinner = () => {
         const board = gameBoard.getBoard();
@@ -55,11 +49,17 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
 
     const isDraw = () => gameBoard.getBoard().every(cell => cell !== '');
 
-    const playRound = (index) => {
+    const resetGame = () => {
+        gameBoard.resetBoard();
+        activePlayer = playerOne;
+        isGameOver = false;
+    };
+
+    const playRound = index => {
         if (isGameOver) return false;
 
-        const playerMove = gameBoard.placeMarker(index, activePlayer.marker);
-        if (!playerMove) return false;
+        const validMove = gameBoard.placeMarker(index, activePlayer.marker);
+        if (!validMove) return false;
 
         if (hasWinner()) {
             activePlayer.addScore();
@@ -76,41 +76,49 @@ function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
         return true;
     };
 
-    return { getLiveBoard, resetLiveBoard, playRound, getActivePlayer, getPlayers: () => [playerOne, playerTwo]};
+    return { getBoard, getPlayers, getActivePlayer, resetGame, playRound };
 }
 
-const displayGame = (() => {
+const displayController = (() => {
     let game = null;
+
+    // DOM references
+    const startForm = document.querySelector('.start-game');
+    const playerOneNameInput = document.querySelector('#player-one');
+    const playerTwoNameInput = document.querySelector('#player-two');
 
     const boardContainer = document.querySelector('.board-container');
     const activePlayerDisplay = document.querySelector('.active-player');
-    const playerOneName = document.querySelector('.player-one-name');
-    const playerTwoName = document.querySelector('.player-two-name');
-    const playerOneScore = document.querySelector('.player-one-score');
-    const playerTwoScore = document.querySelector('.player-two-score');
-    const resetBtn = document.querySelector('.reset-btn');
-    const startForm = document.querySelector('.start-game');
 
+    const playerOneNameDisplay = document.querySelector('.player-one-name');
+    const playerOneScoreDisplay = document.querySelector('.player-one-score');
+    const playerTwoNameDisplay = document.querySelector('.player-two-name');
+    const playerTwoScoreDisplay = document.querySelector('.player-two-score');
+
+    const buttonContainer = document.querySelector('.btn-container');
+    const playAgainBtn = document.querySelector('.play-btn');
+    const resetBtn = document.querySelector('.reset-btn');
+
+    // Helpers
     const updateActivePlayer = () => {
-        const active = game.getActivePlayer();
-        activePlayerDisplay.textContent = `${active.name}'s Turn`;
+        activePlayerDisplay.textContent = `${game.getActivePlayer().name}'s Turn`;
         activePlayerDisplay.style.display = 'block';
     };
 
     const updateScores = () => {
-        playerOneScore.textContent = game.getPlayers()[0].getScore();
-        playerTwoScore.textContent = game.getPlayers()[1].getScore();
+        const [playerOne, playerTwo] = game.getPlayers();
+        playerOneScoreDisplay.textContent = playerOne.getScore();
+        playerTwoScoreDisplay.textContent = playerTwo.getScore();
     };
 
     const renderBoard = () => {
-        boardContainer.innerHTML = '';
-        const board = game.getLiveBoard();
+        boardContainer.textContent = '';
 
-        board.forEach((cell, index) => {
+        game.getBoard().forEach((cell, index) => {
             const cellBtn = document.createElement('button');
             cellBtn.classList.add('cell');
             cellBtn.textContent = cell;
-            boardContainer.append(cellBtn);
+            boardContainer.appendChild(cellBtn);
 
             cellBtn.addEventListener('click', () => {
                 const result = game.playRound(index);
@@ -121,6 +129,7 @@ const displayGame = (() => {
                 if (typeof result === 'string') {
                     activePlayerDisplay.textContent = result;
                     updateScores();
+                    buttonContainer.style.display = 'flex';
                 } else {
                     updateActivePlayer();
                 }
@@ -128,30 +137,40 @@ const displayGame = (() => {
         });
     };
 
+    // Event listeners
     startForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        const p1 = document.querySelector('#player-one').value.trim() || 'Player One';
-        const p2 = document.querySelector('#player-two').value.trim() || 'Player Two';
+        const playerOneName = playerOneNameInput.value.trim() || 'Player One';
+        const playerTwoName = playerTwoNameInput.value.trim() || 'Player Two';
 
-        game = playGame(p1, p2);
+        game = createGame(playerOneName, playerTwoName);
 
-        playerOneName.textContent = p1;
-        playerTwoName.textContent = p2;
+        playerOneNameDisplay.textContent = playerOneName;
+        playerTwoNameDisplay.textContent = playerTwoName;
 
-        updateScores();
         updateActivePlayer();
+        updateScores();
         renderBoard();
 
         startForm.style.display = 'none';
+        buttonContainer.style.display = 'none';
+    });
+
+    playAgainBtn.addEventListener('click', () => {
+        game.resetGame();
+        updateActivePlayer();
+        renderBoard();
+        buttonContainer.style.display = 'none';
     });
 
     resetBtn.addEventListener('click', () => {
-        if (!game) return;
-        game.resetLiveBoard();
-        updateActivePlayer();
-        updateScores(); // add this
-        renderBoard();
+        game = null;
+        boardContainer.textContent = '';
+        activePlayerDisplay.style.display = 'none';
+        buttonContainer.style.display = 'none';
         startForm.style.display = 'flex';
+        playerOneScoreDisplay.textContent = '0';
+        playerTwoScoreDisplay.textContent = '0';
     });
 })();
