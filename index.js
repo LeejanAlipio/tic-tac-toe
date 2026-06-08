@@ -145,6 +145,7 @@ const displayController = (() => {
         const playerTwoName = playerTwoNameInput.value.trim() || 'Player Two';
 
         game = createGame(playerOneName, playerTwoName);
+        game.resetGame();
 
         playerOneNameDisplay.textContent = playerOneName;
         playerTwoNameDisplay.textContent = playerTwoName;
