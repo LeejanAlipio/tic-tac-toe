@@ -1,7 +1,7 @@
 const gameBoard = (() => {
     let board = ['', '', '', '', '', '', '', '', ''];
 
-    const getBoard = () => board;
+    const getBoard = () => [...board];
     const resetBoard = () => board.fill('');
     const placeMarker = (index, marker) => {
         if (index < 0 || index > 8 || board[index] !== '') return false;
