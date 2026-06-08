@@ -2,10 +2,10 @@
 A project where I can use my recently gained knowledge about closures, factory functions, and modular patter.
 
 ## Preview 
-!(Project Image)[image.png]
+![Project Image](/image.png)
 
 ## Live Page
-(Live Page)[https://markleejanalipio.github.io/tic-tac-toe/]
+[Live Page](https://markleejanalipio.github.io/tic-tac-toe/)
 
 ## Pseudocode
 1. CREATE a factory function for the gameboard
