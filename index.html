@@ -9,15 +9,22 @@
 </head>
 <body>
     <div class="container">
-        <h2 class="active-player"></h2>
+        <form class="start-game" action="#" id="names">
+            <div class="inputs">
+                <input type="text" name="Player-one-name" id="player-one" placeholder="Player One Name">
+                <input type="text" name="Player-two-name" id="player-two" placeholder="Player Two Name">
+            </div>
+            <button type="submit" form="names" class="start-btn">Start Game</button>
+        </form>
+        <h2 class="active-player">Player One's Turn</h2>
         <div class="players-score">
             <div class="score">
-                <h2 class="player-one-name"></h2>
-                <p class="player-one-score"></p>
+                <h2 class="player-one-name">Player One</h2>
+                <p class="player-one-score">0</p>
             </div>
             <div class="score">
-                <h2 class="player-two-name"></h2>
-                <p class="player-two-score"></p>
+                <h2 class="player-two-name">Player Two</h2>
+                <p class="player-two-score">0</p>
             </div>
         </div>
         <div class="board-container">
