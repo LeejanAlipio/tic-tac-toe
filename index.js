@@ -1,9 +1,5 @@
-function gameBoard() {
-    let board = [
-        '', '', '',
-        '', '', '',
-        '', '', '',
-    ]
+const gameBoard = (() => {
+    let board = ['', '', '', '', '', '', '', '', ''];
 
     const getBoard = () => board;
     const resetBoard = () => board.fill('');
@@ -11,177 +7,151 @@ function gameBoard() {
         if (index < 0 || index > 8 || board[index] !== '') return false;
         board[index] = marker;
         return true;
-    }
+    };
 
-    return { getBoard, resetBoard, placeMarker }
-}
+    return { getBoard, resetBoard, placeMarker };
+})();
 
 function createPlayer(name, marker) {
     let score = 0;
-
     const addScore = () => score++;
     const getScore = () => score;
-    return { name, marker, getScore, addScore } 
+    return { name, marker, getScore, addScore };
 }
 
 function playGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
-    const board = gameBoard();
-    
     const playerOne = createPlayer(playerOneName, 'X');
     const playerTwo = createPlayer(playerTwoName, 'O');
 
-    const winningCombinations = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ]
-    
+    const WINNING_COMBINATIONS = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6],
+    ];
+
     let activePlayer = playerOne;
+    let isGameOver = false;
 
-    let gameOver = false;
+    const getLiveBoard = () => gameBoard.getBoard();
 
-    const getBoard = () => board.getBoard();
-
-    const resetBoard = () => {
-        board.resetBoard();
+    const resetLiveBoard = () => {
+        gameBoard.resetBoard();
         activePlayer = playerOne;
-        gameOver = false;
-    }
+        isGameOver = false;
+    };
 
-    const switchActivePlayer = () => {
+    const switchPlayer = () => {
         activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
-    }
+    };
 
     const getActivePlayer = () => activePlayer;
 
-    const getPlayers = () => [playerOne, playerTwo];
-
-    const newRound = () => {
-        console.log(board.getBoard());
-        console.log(`${activePlayer.name}'s turn`);
-    }
-    
-    const checkWinner = () => {
-        const currentBoard = board.getBoard();
-
-        const hasWinner = winningCombinations.some(([a, b, c]) =>
-            currentBoard[a] !== '' &&
-            currentBoard[a] === currentBoard[b] &&
-            currentBoard[a] === currentBoard[c]
+    const hasWinner = () => {
+        const board = gameBoard.getBoard();
+        return WINNING_COMBINATIONS.some(([a, b, c]) =>
+            board[a] !== '' && board[a] === board[b] && board[a] === board[c]
         );
+    };
 
-        if (hasWinner) return activePlayer;
-        if (currentBoard.every(cell => cell !== '')) return 'draw';
-        return null;
-    }
+    const isDraw = () => gameBoard.getBoard().every(cell => cell !== '');
 
     const playRound = (index) => {
-        if (gameOver) return false;
+        if (isGameOver) return false;
 
-        const successfulMove = board.placeMarker(index, activePlayer.marker);
+        const playerMove = gameBoard.placeMarker(index, activePlayer.marker);
+        if (!playerMove) return false;
 
-        if (!successfulMove) return false;
-
-        const result = checkWinner();
-
-        if (result) {
-            gameOver = true;
-
-            if (result === 'draw') return 'Draw';
-
+        if (hasWinner()) {
             activePlayer.addScore();
-            console.log(`${activePlayer.name} won!`);
-            return result;
+            isGameOver = true;
+            return `${activePlayer.name} won!`;
         }
 
-        switchActivePlayer();
-        newRound();
+        if (isDraw()) {
+            isGameOver = true;
+            return 'Draw';
+        }
 
-        return successfulMove;
-    }
+        switchPlayer();
+        return true;
+    };
 
-    newRound();
-
-    return { 
-        getActivePlayer,
-        getPlayers, 
-        playRound, 
-        getBoard, 
-        resetBoard,
-        checkWinner
-    }
+    return { getLiveBoard, resetLiveBoard, playRound, getActivePlayer, getPlayers: () => [playerOne, playerTwo]};
 }
 
-const game = playGame();
+const displayGame = (() => {
+    let game = null;
 
-function displayPlayers() {
-    const players = game.getPlayers();
-
+    const boardContainer = document.querySelector('.board-container');
+    const activePlayerDisplay = document.querySelector('.active-player');
     const playerOneName = document.querySelector('.player-one-name');
-    const playerOneScore = document.querySelector('.player-one-score');
     const playerTwoName = document.querySelector('.player-two-name');
+    const playerOneScore = document.querySelector('.player-one-score');
     const playerTwoScore = document.querySelector('.player-two-score');
+    const resetBtn = document.querySelector('.reset-btn');
+    const startForm = document.querySelector('.start-game');
 
-    playerOneName.textContent = players[0].name;
-    playerOneScore.textContent = players[0].getScore();
+    const updateActivePlayer = () => {
+        const active = game.getActivePlayer();
+        activePlayerDisplay.textContent = `${active.name}'s Turn`;
+        activePlayerDisplay.style.display = 'block';
+    };
 
-    playerTwoName.textContent = players[1].name;
-    playerTwoScore.textContent = players[1].getScore();
-}
+    const updateScores = () => {
+        playerOneScore.textContent = game.getPlayers()[0].getScore();
+        playerTwoScore.textContent = game.getPlayers()[1].getScore();
+    };
 
-function displayStatus(result) {
-    const currentActivePlayer = document.querySelector('.active-player');
+    const renderBoard = () => {
+        boardContainer.innerHTML = '';
+        const board = game.getLiveBoard();
 
-    if (result === 'Draw') {
-        currentActivePlayer.textContent = 'Draw';
-        return;
-    }
+        board.forEach((cell, index) => {
+            const cellBtn = document.createElement('button');
+            cellBtn.classList.add('cell');
+            cellBtn.textContent = cell;
+            boardContainer.append(cellBtn);
 
-    if (result && result.name) {
-        currentActivePlayer.textContent = `${result.name} won!`;
-        return;
-    }
+            cellBtn.addEventListener('click', () => {
+                const result = game.playRound(index);
+                if (result === false) return;
 
-    currentActivePlayer.textContent = `${game.getActivePlayer().name}'s Turn`;
-}
+                renderBoard();
 
-function displayBoard() {
-    const gameProgress = game.getBoard();
+                if (typeof result === 'string') {
+                    activePlayerDisplay.textContent = result;
+                    updateScores();
+                } else {
+                    updateActivePlayer();
+                }
+            });
+        });
+    };
 
-    const container = document.querySelector('.board-container');
-    container.textContent = '';
+    startForm.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-    gameProgress.forEach((marker, index) => {
-        const cell = document.createElement('button');
-        cell.textContent = marker;
-        cell.classList.add('cell');
-        cell.dataset.index = index;
+        const p1 = document.querySelector('#player-one').value.trim() || 'Player One';
+        const p2 = document.querySelector('#player-two').value.trim() || 'Player Two';
 
-        container.append(cell);
+        game = playGame(p1, p2);
 
-        cell.addEventListener('click', () => {
-            const result = game.playRound(index);
-            displayGame(result);
-        })
-    })
-}
+        playerOneName.textContent = p1;
+        playerTwoName.textContent = p2;
 
-function displayGame(result) {
-    displayPlayers();
-    displayStatus(result);
-    displayBoard();
-}
+        updateScores();
+        updateActivePlayer();
+        renderBoard();
 
-const resetBtn = document.querySelector('.reset-btn');
+        startForm.style.display = 'none';
+    });
 
-resetBtn.addEventListener('click', () => {
-    game.resetBoard();
-    displayGame();
-})
-
-displayGame();
+    resetBtn.addEventListener('click', () => {
+        if (!game) return;
+        game.resetLiveBoard();
+        updateActivePlayer();
+        updateScores(); // add this
+        renderBoard();
+        startForm.style.display = 'flex';
+    });
+})();
