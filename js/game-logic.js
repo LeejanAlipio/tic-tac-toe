@@ -1,6 +1,6 @@
 import { createPlayer } from "./create-player.js";
 
-const gameBoard = (() => {
+function GameBoard() {
     let board = ['', '', '', '', '', '', '', '', ''];
 
     const getBoard = () => [...board];
@@ -12,7 +12,7 @@ const gameBoard = (() => {
     };
 
     return { getBoard, resetBoard, placeMarker };
-})();
+};
 
 function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
     const playerOne = createPlayer(playerOneName, 'X');
