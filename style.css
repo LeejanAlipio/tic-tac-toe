@@ -108,10 +108,12 @@ body {
 }
 
 .cell {
+    text-align: center;
     background-color: #545F73;
     border: none;
     border-radius: 10px;
-    font-size: 40px;
+    font-size: 3.5rem;
+    font-weight: bold;
     cursor: pointer;
 }
 
@@ -131,4 +133,14 @@ body {
     cursor: pointer;
     font-weight: bold;
     flex: 1;
+}
+
+.marker-x {
+    color: #6EAEFF;
+    text-shadow: 0 0 12px rgba(230, 57, 70, 0.35);
+}
+
+.marker-o {
+    color: #67001F;
+    text-shadow: 0 0 12px rgba(230, 57, 70, 0.35);
 }
