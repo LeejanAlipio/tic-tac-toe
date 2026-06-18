@@ -5,7 +5,7 @@ A project where I can use my recently gained knowledge about closures, factory f
 ![Project Image](/image.png)
 
 ## Live Page
-[Live Page](https://markleejanalipio.github.io/tic-tac-toe/)
+[Live Page](https://tic-tac-toe-zeta-eight-51.vercel.app/?Player-one-name=&Player-two-name=#)
 
 ## Pseudocode
 1. CREATE a factory function for the gameboard
