@@ -3,7 +3,6 @@ import { createGame } from "./game-logic.js";
 const displayController = (() => {
     let game = null;
 
-    // DOM references
     const startForm = document.querySelector('.start-game');
     const playerOneNameInput = document.querySelector('#player-one');
     const playerTwoNameInput = document.querySelector('#player-two');
@@ -20,7 +19,6 @@ const displayController = (() => {
     const playAgainBtn = document.querySelector('.play-btn');
     const resetBtn = document.querySelector('.reset-btn');
 
-    // Helpers
     const updateActivePlayer = () => {
         activePlayerDisplay.textContent = `${game.getActivePlayer().name}'s Turn`;
         activePlayerDisplay.style.display = 'block';
@@ -33,11 +31,13 @@ const displayController = (() => {
     };
 
     const renderBoard = () => {
-        boardContainer.textContent = '';
+        boardContainer.replaceChildren();
 
         game.getBoard().forEach((cell, index) => {
             const cellBtn = document.createElement('button');
             cellBtn.classList.add('cell');
+            if (cell === 'X') cellBtn.classList.add('marker-x');
+            if (cell === 'O') cellBtn.classList.add('marker-o');
             cellBtn.textContent = cell;
             boardContainer.appendChild(cellBtn);
 
@@ -66,7 +66,6 @@ const displayController = (() => {
         const playerTwoName = playerTwoNameInput.value.trim() || 'Player Two';
 
         game = createGame(playerOneName, playerTwoName);
-        game.resetGame();
 
         playerOneNameDisplay.textContent = playerOneName;
         playerTwoNameDisplay.textContent = playerTwoName;
@@ -80,6 +79,7 @@ const displayController = (() => {
     });
 
     playAgainBtn.addEventListener('click', () => {
+        if (!game) return;
         game.resetGame();
         updateActivePlayer();
         renderBoard();
@@ -94,5 +94,7 @@ const displayController = (() => {
         startForm.style.display = 'flex';
         playerOneScoreDisplay.textContent = '0';
         playerTwoScoreDisplay.textContent = '0';
+        playerOneNameDisplay.textContent = '';
+        playerTwoNameDisplay.textContent = '';
     });
 })();
