@@ -15,6 +15,7 @@ function GameBoard() {
 };
 
 function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
+    const board = GameBoard();
     const playerOne = createPlayer(playerOneName, 'X');
     const playerTwo = createPlayer(playerTwoName, 'O');
 
@@ -27,7 +28,8 @@ function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') 
     let activePlayer = playerOne;
     let isGameOver = false;
 
-    const getBoard = () => gameBoard.getBoard();
+    const getGameStatus = () => isGameOver;
+    const getBoard = () => board.getBoard();
     const getPlayers = () => [playerOne, playerTwo];
     const getActivePlayer = () => activePlayer;
 
@@ -36,16 +38,16 @@ function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') 
     };
 
     const hasWinner = () => {
-        const board = gameBoard.getBoard();
+        const liveBoard = board.getBoard();
         return WINNING_COMBINATIONS.some(([a, b, c]) =>
-            board[a] !== '' && board[a] === board[b] && board[a] === board[c]
+            liveBoard[a] !== '' && liveBoard[a] === liveBoard[b] && liveBoard[a] === liveBoard[c]
         );
     };
 
-    const isDraw = () => gameBoard.getBoard().every(cell => cell !== '');
+    const isDraw = () => board.getBoard().every(cell => cell !== '');
 
     const resetGame = () => {
-        gameBoard.resetBoard();
+        board.resetBoard();
         activePlayer = playerOne;
         isGameOver = false;
     };
@@ -53,7 +55,7 @@ function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') 
     const playRound = index => {
         if (isGameOver) return false;
 
-        const validMove = gameBoard.placeMarker(index, activePlayer.marker);
+        const validMove = board.placeMarker(index, activePlayer.marker);
         if (!validMove) return false;
 
         if (hasWinner()) {
@@ -71,7 +73,7 @@ function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') 
         return true;
     };
 
-    return { getBoard, getPlayers, getActivePlayer, resetGame, playRound };
+    return { getBoard, getGameStatus, getPlayers, getActivePlayer, resetGame, playRound };
 }
 
-export { createGame }
+export { createGame };
