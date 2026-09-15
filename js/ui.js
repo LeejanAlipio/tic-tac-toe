@@ -1,6 +1,6 @@
 import { createGame } from "./game-logic.js";
 
-const displayController = (() => {
+const UIController = (() => {
     let game = null;
 
     const startForm = document.querySelector('.start-game');
@@ -96,5 +96,6 @@ const displayController = (() => {
         playerTwoScoreDisplay.textContent = '0';
         playerOneNameDisplay.textContent = '';
         playerTwoNameDisplay.textContent = '';
+        startForm.reset();
     });
 })();
