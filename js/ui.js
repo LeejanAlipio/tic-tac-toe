@@ -96,5 +96,6 @@ const displayController = (() => {
         playerTwoScoreDisplay.textContent = '0';
         playerOneNameDisplay.textContent = '';
         playerTwoNameDisplay.textContent = '';
+        startForm.reset();
     });
 })();
