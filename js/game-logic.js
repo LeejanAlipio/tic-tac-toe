@@ -1,6 +1,6 @@
 import { createPlayer } from "./create-player.js";
 
-function gameBoard() {
+const GameBoard = (() => {
     let board = ['', '', '', '', '', '', '', '', ''];
 
     const getBoard = () => [...board];
@@ -12,10 +12,9 @@ function gameBoard() {
     };
 
     return { getBoard, resetBoard, placeMarker };
-};
+})();
 
 function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') {
-    const board = gameBoard();
     const playerOne = createPlayer(playerOneName, 'X');
     const playerTwo = createPlayer(playerTwoName, 'O');
 
@@ -29,7 +28,7 @@ function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') 
     let isGameOver = false;
 
     const getGameStatus = () => isGameOver;
-    const getBoard = () => board.getBoard();
+    const getBoard = () => GameBoard.getBoard();
     const getPlayers = () => [playerOne, playerTwo];
     const getActivePlayer = () => activePlayer;
 
@@ -38,16 +37,16 @@ function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') 
     };
 
     const hasWinner = () => {
-        const liveBoard = board.getBoard();
+        const liveBoard = GameBoard.getBoard();
         return WINNING_COMBINATIONS.some(([a, b, c]) =>
             liveBoard[a] !== '' && liveBoard[a] === liveBoard[b] && liveBoard[a] === liveBoard[c]
         );
     };
 
-    const isDraw = () => board.getBoard().every(cell => cell !== '');
+    const isDraw = () => GameBoard.getBoard().every(cell => cell !== '');
 
     const resetGame = () => {
-        board.resetBoard();
+        GameBoard.resetBoard();
         activePlayer = playerOne;
         isGameOver = false;
     };
@@ -55,7 +54,7 @@ function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') 
     const playRound = index => {
         if (isGameOver) return false;
 
-        const validMove = board.placeMarker(index, activePlayer.marker);
+        const validMove = GameBoard.placeMarker(index, activePlayer.marker);
         if (!validMove) return false;
 
         if (hasWinner()) {
