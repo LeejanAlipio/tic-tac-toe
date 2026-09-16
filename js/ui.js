@@ -87,6 +87,8 @@ const UIController = (() => {
     });
 
     resetBtn.addEventListener('click', () => {
+        if (game) game.resetGame();
+
         game = null;
         boardContainer.textContent = '';
         activePlayerDisplay.style.display = 'none';
