@@ -84,7 +84,6 @@ body {
 
 .player-one-name, .player-two-name {
     font-size: 15px;
-    text-transform: uppercase;
     color: white;
 }
 
