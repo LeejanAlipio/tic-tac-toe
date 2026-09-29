@@ -27,7 +27,6 @@ function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') 
     let activePlayer = playerOne;
     let isGameOver = false;
 
-    const getGameStatus = () => isGameOver;
     const getBoard = () => GameBoard.getBoard();
     const getPlayers = () => [playerOne, playerTwo];
     const getActivePlayer = () => activePlayer;
