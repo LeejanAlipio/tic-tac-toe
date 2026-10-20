@@ -71,7 +71,7 @@ function createGame(playerOneName = 'Player One', playerTwoName = 'Player Two') 
         return true;
     };
 
-    return { getBoard, getGameStatus, getPlayers, getActivePlayer, resetGame, playRound };
+    return { getBoard, getPlayers, getActivePlayer, resetGame, playRound };
 }
 
 export { createGame };
