@@ -1,24 +1,11 @@
 # Tic-Tac-Toe
-
-A small browser game built to practice closures, factory functions, and JavaScript modules.
-
-## Preview
-
+A small browser and UI game built to practice closures, factory functions, and JavaScript modules.
 ![Project Image](/image.png)
 
 ## Live Page
-
-[Live Page](https://tic-tac-toe-zeta-eight-51.vercel.app/?Player-one-name=&Player-two-name=#)
-
-## How It Works
-
-- `GameBoard` is an IIFE that keeps the board array private and exposes methods to read, reset, and update it.
-- `createPlayer(name, marker)` is a factory function that creates a player with private score state.
-- `createGame(playerOneName, playerTwoName)` controls turns, validates moves, detects wins and draws, and updates scores.
-- `UIController` is an IIFE that connects the game logic to the form, board, score displays, and reset controls.
+Visit the page here: [Live Page](https://tic-tac-toe-zeta-eight-51.vercel.app/?Player-one-name=&Player-two-name=#)
 
 ## Game Flow
-
 1. Enter two player names and start the game.
 2. Player One starts with `X`; Player Two uses `O`.
 3. Players take turns selecting an empty cell.
@@ -27,7 +14,6 @@ A small browser game built to practice closures, factory functions, and JavaScri
 6. **Reset Game** clears the board, scores, and player names so a new game can start.
 
 ## Pseudocode
-
 1. CREATE an IIFE for the gameboard
    - CREATE an array to store all nine placements
    - CREATE a function that resets the entire array
